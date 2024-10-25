@@ -46,6 +46,8 @@ export default function App() {
     const [inputValue, setInputValue] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [switchValue, setSwitchValue] = useState(false);
+    const [modal, setModal] = useState(false);
+    
 
     const handlePress = () => {
         console.log(inputValue);
@@ -62,6 +64,8 @@ export default function App() {
         </View>
     );
 
+   
+
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}  showsVerticalScrollIndicator={false}>
             <View style={styles.container}>
@@ -75,22 +79,23 @@ export default function App() {
                 <Button title="Submit" onPress={handlePress} />
 
                 <View style={styles.switchContainer}>
-                    <Text style={styles.label}>Enable Option:</Text>
+                    <Text style={styles.label}>Enable Option:</Text> 
                     {/* switch */}
-                    <Switch
+                     <Switch
                         value={switchValue}
                         onValueChange={(value) => setSwitchValue(value)}
                     />
                 </View>
+                <Text>Modal  {modal ? 'Open' : 'Close'}</Text>
                 {/* TouchableOpacity */}
-                <TouchableOpacity style={styles.button} onPress={toggleModal}>
+                <TouchableOpacity style={styles.button} onPress={()=> setModal(true)}>
                     <Text style={styles.buttonText}>Open Modal</Text>
                 </TouchableOpacity>
                 {/* modal */}
                 <Modal
                     animationType="slide"
                     transparent={true}
-                    visible={modalVisible}
+                    visible={modal}
                     onRequestClose={toggleModal}
                 >
                     <View style={styles.modalContainer}>
@@ -100,7 +105,7 @@ export default function App() {
                             </Text>
                             <TouchableOpacity
                                 style={[styles.button, styles.buttonClose]}
-                                onPress={toggleModal}
+                                onPress={()=> setModal(false)}
                             >
                                 <Text style={styles.buttonText}>
                                     Close Modal
@@ -108,32 +113,32 @@ export default function App() {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </Modal>
-                <View
+                </Modal> 
+                 <View
                     style={{
                         backgroundColor: "red",
                         flexDirection: "row",
                         width: "100%",
+                        height: 200
                     }}
                 >
-                    <View style={{ backgroundColor: "blue", width: "33%" }}>
+                    <View style={{ backgroundColor: "yellow", width: "33%", justifyContent: 'center', alignItems: 'center' }}>
                         <Text>Layout</Text>
                     </View>
-                    <View style={{ backgroundColor: "green", width: "33%" }}>
+                    <View style={{ backgroundColor: "orange", width: "33%" }}>
                         <Text>Layout</Text>
                     </View>
-                    <View style={{ backgroundColor: "blue", width: "33%" }}>
+                    <View style={{ backgroundColor: "pink", width: "33%" }}>
                         <Text>Layout</Text>
                     </View>
                 </View>
-                <ThreeColumnLayout />
+                {/* <ThreeColumnLayout /> */}
                 {/* flatlist */}
-                <FlatList
+                 <FlatList
                     data={data} // Data to be rendered
                     renderItem={renderItem} // Function to render each item
                     keyExtractor={(item) => item.id} // Unique key for each item
-                    //horizontal={true}
-                  showsVerticalScrollIndicator={false}
+                   showsVerticalScrollIndicator={false}
                 />
                 <FlatList
                     data={data} // Data to be rendered
@@ -141,7 +146,7 @@ export default function App() {
                     keyExtractor={(item) => item.id} // Unique key for each item
                     horizontal={true}
                    showsHorizontalScrollIndicator={false}
-                />
+                /> 
             </View>
         </ScrollView>
     );

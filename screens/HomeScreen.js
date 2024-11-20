@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import { Button, Card, Text, Avatar } from "react-native-paper";
 import { fetchItems } from "../utils";
+import { Platform } from "react-native";
+import { removeSession } from "../storageUtils";  // Import the token utility
 
 function HomeScreen({ navigation }) {
     const [items, setItems] = useState([]);
@@ -17,14 +19,36 @@ function HomeScreen({ navigation }) {
     useEffect(() => {
         loadItems();
         const unsubscribe = navigation.addListener("focus", loadItems);
+
+        // Setting the Logout button in the header dynamically
+        navigation.setOptions({
+            headerRight: () => (
+                <Button 
+                    mode="text" 
+                    onPress={handleLogout}
+                >
+                    Logout
+                </Button>
+            ),
+        });
+
         return unsubscribe;
     }, [navigation]);
+
+    // Handle logout - clear session and navigate to login screen
+    const handleLogout = async () => {
+        // Clear session (token or any user data)
+        await removeSession(); // Assuming removeToken clears the session data
+
+        // After clearing the session, navigate to Login screen
+        navigation.replace("Login"); // Replace the current screen with the Login screen
+    };
 
     const renderItem = ({ item }) => (
         <Card
             style={styles.card}
             onPress={() =>
-                navigation.navigate("ItemDetail", { itemId: item.id, })
+                navigation.navigate("ItemDetail", { itemId: item.id })
             }
         >
             <Card.Content style={styles.cardContent}>
@@ -49,9 +73,9 @@ function HomeScreen({ navigation }) {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={renderItem}
                 ListEmptyComponent={<Text>No items added.</Text>}
-                refreshing={refreshing} // To show the refresh indicator
-                onRefresh={loadItems} // Trigger loadItems when pull-to-refresh is used
-                showsVerticalScrollIndicator={false} 
+                refreshing={refreshing}
+                onRefresh={loadItems}
+                showsVerticalScrollIndicator={false}
             />
             <Button
                 mode="contained"

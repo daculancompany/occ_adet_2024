@@ -12,20 +12,26 @@ function ItemDetailScreen({ route }) {
 
     useEffect(() => {
         const fetchItemDetails = async () => {
+            setLoading(true);  
             try {
-                const response = await axios.get(`${API_URL}?id=${itemId}`);
+                const response = await axios.post(API_URL, {
+                    id: itemId,
+                    action: 'get-item'  
+                });
+        
                 if (response.data.success) {
-                    setItem(response.data.item);
+                    setItem(response.data.item); 
                 } else {
-                    alert("Item not found");
+                    alert("Item not found");  
                 }
             } catch (error) {
-                console.error("Error fetching item details:", error);
-                alert("An error occurred while fetching item details");
+                console.error("Error fetching item details:", error); 
+                alert("An error occurred while fetching item details");  
             } finally {
-                setLoading(false);
+                setLoading(false);  
             }
         };
+        
 
         fetchItemDetails();
     }, [itemId]);
